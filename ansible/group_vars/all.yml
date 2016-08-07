@@ -1,0 +1,133 @@
+---
+php_timezone: Europe/Kiev
+php_install_dev: false
+php_fpm_listen: /var/run/php/php7.0-fpm.sock
+php_packages: [php7.0-fpm, php7.0-cli, php7.0-intl, php7.0-gd, php-mbstring, php7.0-curl, php7.0-xml, php-zip, php7.0-mysql, php7.0-opcache]
+
+rollbar_token: 123
+rollbar_environment: dev
+
+rsync_opts:
+  - "--exclude .git"
+  - "--exclude ansible"
+  - "--exclude var"
+  - "--exclude app/config/parameters.yml"
+  - "--exclude app/data"
+
+app_domain: _
+app_env: dev
+app_secret: 4c31WXH3sEiCz3LU5NzZ9rp8prLqd5K7
+app_telegram_token: 224755899:AAHqGvJNRWX3jeTuZPaRZ6EQ6O9-hFL-4SM
+app_currencies: [EUR, USD, UAH]
+app_default_currency: USD
+www_user: www-data
+app_google_accountId: UA-123456-7
+
+max_allowed_packet: 16M
+key_buffer: 16M
+thread_stack: 192K
+thread_cache_size: 8
+
+db_name: alicebot
+db_collation: utf8_general_ci
+db_user: alicebot
+db_user_password: al1c3b0t
+db_host: localhost
+db_server_version: 5.5
+
+all_currencies:
+  AED: United Arab Emirates Dirham
+  AUD: Australian Dollar
+  AZN: Azerbaijani Manat
+  BAM: Bosnia-Herzegovina Convertible Mark
+  BGN: Bulgarian Lev
+  BOB: Bolivian Boliviano
+  BRL: Brazilian Real
+  BSD: Bahamian Dollar
+  BTN: Bhutanese Ngultrum
+  BWP: Botswanan Pula
+  BYR: Belarusian Ruble
+  BZD: Belize Dollar
+  CAD: Canadian Dollar
+  CHF: Swiss Franc
+  CLP: Chilean Peso
+  CNY: Chinese Yuan
+  COP: Colombian Peso
+  CUP: Cuban Peso
+  CVE: Cape Verdean Escudo
+  CZK: Czech Republic Koruna
+  DKK: Danish Krone
+  DOP: Dominican Peso
+  DZD: Algerian Dinar
+  EGP: Egyptian Pound
+  ETB: Ethiopian Birr
+  EUR: Euro
+  GBP: British Pound Sterling
+  GEL: Georgian Lari
+  HKD: Hong Kong Dollar
+  HNL: Honduran Lempira
+  HRK: Croatian Kuna
+  HTG: Haitian Gourde
+  HUF: Hungarian Forint
+  IDR: Indonesian Rupiah
+  ILS: Israeli New Sheqel
+  INR: Indian Rupee
+  IQD: Iraqi Dinar
+  IRR: Iranian Rial
+  ISK: Icelandic Króna
+  JMD: Jamaican Dollar
+  JPY: Japanese Yen
+  KES: Kenyan Shilling
+  KGS: Kyrgystani Som
+  KHR: Cambodian Riel
+  KMF: Comorian Franc
+  KRW: South Korean Won
+  KWD: Kuwaiti Dinar
+  KYD: Cayman Islands Dollar
+  KZT: Kazakhstani Tenge
+  LBP: Lebanese Pound
+  LKR: Sri Lankan Rupee
+  LYD: Libyan Dinar
+  MAD: Moroccan Dirham
+  MDL: Moldovan Leu
+  MKD: Macedonian Denar
+  MUR: Mauritian Rupee
+  MVR: Maldivian Rufiyaa
+  MXN: Mexican Peso
+  MYR: Malaysian Ringgit
+  NPR: Nepalese Rupee
+  NZD: New Zealand Dollar
+  PAB: Panamanian Balboa
+  PEN: Peruvian Nuevo Sol
+  PHP: Philippine Peso
+  PKR: Pakistani Rupee
+  PLN: Polish Zloty
+  PYG: Paraguayan Guarani
+  RON: Romanian Leu
+  RSD: Serbian Dinar
+  RUB: Russian Ruble
+  SGD: Singapore Dollar
+  THB: Thai Baht
+  TJS: Tajikistani Somoni
+  TMT: Turkmenistani Manat
+  TND: Tunisian Dinar
+  TRY: Turkish Lira
+  TTD: Trinidad and Tobago Dollar
+  TZS: Tanzanian Shilling
+  UAH: Ukrainian Hryvnia
+  USD: United States Dollar
+  UYU: Uruguayan Peso
+  UZS: Uzbekistan Som
+  VEF: Venezuelan Bolívar
+  VND: Vietnamese Dong
+  VUV: Vanuatu Vatu
+  WST: Samoan Tala
+  XAF: CFA Franc BEAC
+  XCD: East Caribbean Dollar
+  XDR: Special Drawing Rights
+  XOF: CFA Franc BCEAO
+  XPF: CFP Franc
+  YER: Yemeni Rial
+  ZAR: South African Rand
+  ZMK: Zambian Kwacha
+  ZWL: Zimbabwean Dollar

@@ -1,0 +1,11 @@
+{% if categories|length > 0 %}
+I have the following list of categories for you:
+{% for category in categories %}
+- {{ category.title }}
+{% endfor %}
+{% else %}
+Sorry, you didn't track any expenses yet and I didn't have any categories created.
+Please use the following example command to track your spendings and I will get the categories:
+
+``` - food $15.28```
+{% endif %}

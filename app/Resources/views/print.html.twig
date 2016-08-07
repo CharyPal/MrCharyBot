@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ absolute_url(asset('bundles/app/css/bootstrap.css')) }}">
+    {% endblock %}
+</head>
+<body>
+
+<div id="container">
+    {% block body %}{% endblock %}
+</div>
+
+{% block javascripts %}{% endblock %}
+{% block analytics %}
+    {% include "GoogleBundle:Analytics:async_universal.html.twig" %}
+{% endblock analytics %}
+</body>
+</html>

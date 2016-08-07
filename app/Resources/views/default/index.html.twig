@@ -1,0 +1,140 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MrCharyBot sends his regards{% endblock %}
+
+{% block body %}
+
+<h1>Hello, I'm @MrCharyBot!</h1>
+
+<p>I help you manage your personal finances with ease. When you make purchases of anything send me the message
+and I will store your expenses. When earning money send another message.
+    Afterwards I will be able to provide you with detailed reports on your balance, spendings and earnings
+for weeks, months and years.
+</p>
+
+<div class="text-center">
+    <a href="https://telegram.me/MrCharyBot" id="add-bot" class="btn btn-primary btn-large">Add @MrCharyBot on Telegram</a>
+</div>
+
+<h2>Currencies</h2>
+<p>
+    I operate with currencies. When you create the account I set the default currency to <b>USD</b>.
+    You will be able to change your account currency with <a href="#changecurrency">setcurrency command</a>.
+    I support a lot of currencies. I even didn't know that some of them exist.
+    Also I support currency conversion. When you add our incomes or expenses in foreign currency I will convert
+    them to your account base currency using the rate as of today. To get the recent rates I go to
+    <a href="http://finance.yahoo.com">Yahoo!.Finance</a> on a daily basis.
+    <a href="#" id="currency-toggle">See the complete list of currencies</a>.
+</p>
+
+
+<ul id="currency-list">
+    {% for code, currency in currencies %}
+    <li><b>{{ code }}</b>: {{ currency }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Commands</h2>
+<p>I have a pre-defined commands. Sending me those will make me act on your behalf.</p>
+
+<h3>Add Income</h3>
+
+<samp>+3456.22 &lt;currency&gt; &lt;category&gt;</samp>
+
+<p>
+    will add income to your account. Any word may be the category. If it doesn't exist it will be created for you.
+    You will usually type from your mobile device, so even when you misspell <b>intrest</b> I will get that's <b>interest</b>.
+    Currency is not required here, but when you earn in different currency than your base I will convert that to the base currency when showing reports.
+    Example usage:
+</p>
+<pre class="">
++8000 USD interest
++100 EUR furniture
+</pre>
+
+<p>yes, you just sold your sofa.</p>
+
+<h3>Add Expenses</h3>
+<samp class="">-1234.22 &lt;currency&gt; &lt;category&gt;</samp>
+
+<p>
+    will add expense to your account. Any word may be the category. If it doesn't exist it will be created for you.
+    You will usually type from your mobile device, so even when you misspell <b>cofee</b> I will get that's <b>coffee</b>.
+    Currency is not required here, but when you travel abroad you will find much more convenient to report expenses in local currency.
+    Example usage:
+</p>
+<pre class="">
+-15 USD bar
+-160 EUR travel
+</pre>
+
+<h3>Generate a Report</h3>
+<samp class="">report &lt;period&gt;</samp>
+<p>
+    will send you back a nice shiny Profit and Loss PDF report. Try it, it's awesome.
+    I know about the following periods: <b>last week</b>, <b>this week</b>, <b>last month</b>, <b>this month</b>.
+    More periods will be added later.
+    Example usage:
+</p>
+<pre class="">
+report this week
+report last month
+</pre>
+
+<a id="changecurrency"></a>
+<h3>Set Account Currency</h3>
+<samp class="">setcurrency &lt;currency&gt;</samp>
+<p>
+    will set base currency for your account. Default currency for created accounts is <b>USD</b>.
+    Example usage:
+</p>
+<pre class="">setcurrency EUR</pre>
+
+<h3>Show Your Categories</h3>
+<samp class="">show categories</samp>
+<p>
+    I will show you the list of categories you've created from your messages.
+</p>
+
+<h3>Rename a Category</h3>
+<samp class="">setcategoryname &lt;oldName&gt; &lt;newName&gt; </samp>
+<p>
+    will rename existing category name to new name. Example usage:
+</p>
+<pre class="">setcategoryname bar restaurant</pre>
+
+<h3>Merge One Category into Another</h3>
+<samp class="">mergecategory &lt;oldCategory&gt; &lt;category&gt; </samp>
+<p>
+    will merge incomes and expenses in <b>oldCategory</b> to <b>category</b>.
+    This is useful when you've accidentally created wrong category
+    but do not want to loose tracked information.
+    Example usage:
+</p>
+<pre class="">mergecategory cafe restaurant</pre>
+
+<h3>Help</h3>
+<samp class="">help</samp>
+<p>will show you a link to the very same page.</p>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+#currency-list {
+    display:none;
+}
+</style>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+$(document).ready(function(){
+   $('#currency-toggle').click(function(e){
+        e.preventDefault();
+        $('#currency-list').toggle('slow');
+   });
+});
+</script>
+{% endblock %}

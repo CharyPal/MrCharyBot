@@ -1,0 +1,7 @@
+Error occurred when handling your message.
+{% if app.debug %}
+{{ e.message }}
+```
+{{ e.getTraceAsString }}
+```
+{% endif %}

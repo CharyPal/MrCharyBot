@@ -1,0 +1,19 @@
+imports:
+    - { resource: config_dev.yml }
+
+framework:
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        collect: false
+
+web_profiler:
+    toolbar: false
+    intercept_redirects: false
+
+
+services:
+    app.telegram_update_handler:
+        class: Tests\AppBundle\DummyHandler
+        arguments: ["@event_dispatcher", "@logger"]

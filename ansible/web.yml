@@ -1,0 +1,37 @@
+---
+- hosts: web
+  become: yes
+  roles:
+    - geerlingguy.nginx
+    - Xobb.php
+  tasks:
+    - name: Create the virtualhost
+      template:
+        src: virtualhost.conf.j2
+        dest: "/etc/nginx/sites-enabled/{{app_domain}}.conf"
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - restart nginx
+        - restart php7-fpm
+
+    - name: Create the renewal script for letsencrypt
+      template:
+        src: letsrenew.sh.j2
+        dest: /usr/local/bin/letsrenew.sh
+        owner: root
+        group: root
+        mode: 0755
+      tags:
+        - letsencrypt
+
+    - name: Create a cron task to renew certificates
+      cron:
+        name: Renew ssh certificate
+        special_time: weekly
+        user: root
+        job: /usr/local/bin/letsrenew.sh
+      when: app_env == 'prod'
+      tags:
+        - letsencrypt

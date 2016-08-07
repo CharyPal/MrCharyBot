@@ -1,0 +1,7 @@
+Your expenses from *{{ period.startDate|date('M d, Y') }}* to *{{ period.endDate|date('M d, Y') }}*:
+
+    {% for category in categories %}
+    - {{ category.title }}: *{{ category.expenseAmount|money_localized_format }}*
+    {% endfor %}
+
+Total expense: *{{ total|money_localized_format }}*.

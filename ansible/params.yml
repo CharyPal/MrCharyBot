@@ -1,0 +1,8 @@
+---
+- hosts: jenkins
+  connection: local
+  tasks:
+    - name: Generate parameters.yml in local installation
+      template:
+        src: templates/parameters.yml.j2
+        dest: ../app/config/parameters.yml

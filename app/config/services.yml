@@ -1,0 +1,135 @@
+# Learn more about services, parameters and containers at
+# http://symfony.com/doc/current/book/service_container.html
+parameters:
+# not much here
+
+services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    app.totals_calculator:
+        class: AppBundle\TotalsCalculator
+        arguments: ["@tbbc_money.pair_manager"]
+
+    app.money_parser:
+        class: AppBundle\MoneyHelper
+        arguments: ["%app_currencies%"]
+
+    app.telegram.update_handler:
+        class: AppBundle\Telegram\UpdateHandler
+        arguments: ["@event_dispatcher", "@logger"]
+
+    app.abstract_message_handler:
+        abstract: true
+        class: AppBundle\Handler\AbstractHandler
+        arguments: ["@templating", "@logger", "@doctrine.orm.entity_manager"]
+
+    # Incoming Message Handlers
+    app.receive.start:
+        class: AppBundle\Handler\Start
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 900 }
+
+    app.receive.expense:
+        class: AppBundle\Handler\Expense
+        parent: app.abstract_message_handler
+        calls:
+            - [setMoneyParser, ["@app.money_parser"]]
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 800 }
+
+    app.receive.income:
+        class: AppBundle\Handler\Income
+        parent: app.abstract_message_handler
+        calls:
+            - [setMoneyParser, ["@app.money_parser"]]
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 700 }
+
+    app.receive.report:
+        class: AppBundle\Handler\Report
+        parent: app.abstract_message_handler
+        calls:
+            - [setCacheDir, ["%kernel.cache_dir%"]]
+            - [setFilesystem, ["@filesystem"]]
+            - [setPdfGenerator, ["@knp_snappy.pdf"]]
+            - [setTotalsCalculator, ["@app.totals_calculator"]]
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 600 }
+
+    app.receive.setcurrency:
+        class: AppBundle\Handler\SetCurrency
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 500 }
+
+    app.receive.show_expense:
+        class: AppBundle\Handler\Show\Expense
+        parent: app.abstract_message_handler
+        calls:
+            - [setTotalsCalculator, ["@app.totals_calculator"]]
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 302 }
+
+    app.receive.show_category:
+        class: AppBundle\Handler\Show\Category
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 301 }
+
+    app.receive.show:
+        class: AppBundle\Handler\Show
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 300 }
+
+    app.receive.category_merge:
+        class: AppBundle\Handler\Category\Merge
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 202 }
+
+    app.receive.category_rename:
+        class: AppBundle\Handler\Category\Rename
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 201 }
+
+    app.receive.help_expense:
+        class: AppBundle\Handler\Help\Expense
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 102 }
+
+    app.receive.help_currency:
+        class: AppBundle\Handler\Help\CurrencyHelp
+        parent: app.abstract_message_handler
+        calls:
+            - [setCurrencies, [%all_currencies%]]
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 101 }
+
+    app.receive.help:
+        class: AppBundle\Handler\Help
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 100 }
+
+    app.receive.unknown:
+        class: AppBundle\Handler\Unknown
+        parent: app.abstract_message_handler
+        tags:
+            - { name: kernel.event_listener, event: message.receive, priority: 0 }
+
+    # Send Response Handlers
+    app.telegram.respond.message:
+        class: AppBundle\Telegram\Sender\Message
+        tags:
+            - { name: kernel.event_listener, event: message.respond }
+
+    app.telegram.respond.document:
+        class: AppBundle\Telegram\Sender\Document
+        tags:
+            - { name: kernel.event_listener, event: message.respond }

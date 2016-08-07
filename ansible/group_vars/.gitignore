@@ -1,0 +1,4 @@
+*
+!.gitignore
+!all.yml
+!vagrant.yml

@@ -1,0 +1,25 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - Xobb.percona
+    - geerlingguy.nginx
+    - Xobb.php
+  tasks:
+    - name: Install ansible
+      apt: pkg=ansible state=latest
+
+    - name: Create the parameters.yml file
+      become: no
+      template: src=parameters.yml.j2 dest={{ document_root }}/app/config/parameters.yml
+
+    - name: Make sure default virtualhost is absent
+      file: path=/etc/nginx/sites-enabled/default state=absent
+      notify:
+        - restart nginx
+
+    - name: Create the virtualhost
+      template: src=vagrant.conf.j2 dest=/etc/nginx/sites-enabled/{{app_domain}}.conf owner=root group=root mode=0644
+      notify:
+        - restart nginx
+        - restart php7-fpm

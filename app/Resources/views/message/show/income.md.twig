@@ -1,0 +1,7 @@
+Your income from *{{ period.startDate|date('M d, Y') }}* to *{{ period.endDate|date('M d, Y') }}*:
+
+    {% for category in totals.categories %}
+    - {{ category.title }}: *{{ category.incomeAmount|money_localized_format }}*
+    {% endfor %}
+
+Total income: *{{ totals.grand_total|money_localized_format }}*.

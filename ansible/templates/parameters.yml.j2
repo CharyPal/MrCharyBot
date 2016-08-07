@@ -1,0 +1,31 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_server_version: {{ db_server_version }}
+    database_host: {{ db_host }}
+    database_port: {{ db_port|default('~') }}
+    database_name: {{ db_name }}
+    database_user: {{ db_user }}
+    database_password: "{{ db_user_password }}"
+    mailer_transport: {{ mailer_transport|default('smtp') }}
+    mailer_host: {{ mailer_host|default('127.0.0.1') }}
+    mailer_user: {{ mailer_user|default('~') }}
+    mailer_password: {{ mailer_password|default('~') }}
+    secret: {{ app_secret }}
+    telegram_token: {{ app_telegram_token }}
+    app_domain: {{ app_domain }}
+    app_currencies:
+    {% for currency, title in all_currencies.iteritems() %}
+    - {{currency}}
+    {% endfor %}
+    
+    app_wkhtmltopdf_binary: {{ app_wkhtmltopdf_binary|default("/vagrant/vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64") }}
+
+    app_default_currency: {{ app_default_currency }}
+    all_currencies:
+    {% for key, name in all_currencies.iteritems() %}
+    {{key}}: {{name}}
+    {% endfor %}
+
+    app_google_accountId: {{ app_google_accountId }}
+    rollbar_token: {{ rollbar_token }}
+    rollbar_environment: {{ rollbar_environment }}

@@ -1,0 +1,5 @@
+---
+- hosts: database
+  become: yes
+  roles:
+    - Xobb.percona

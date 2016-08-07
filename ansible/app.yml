@@ -1,0 +1,76 @@
+---
+- hosts: web
+  tasks:
+    - name: Create the deployment folder
+      become: yes
+      file:
+        path: "{{ document_root }}"
+        state: directory
+        owner: xobb
+        group: xobb
+
+
+    - name: Upload the data to the server
+      synchronize:
+        src: ./../../
+        dest: "{{ document_root }}"
+        delete: yes
+        compress: yes
+        rsync_opts: "{{ rsync_opts }}"
+      notify:
+        - restart php7-fpm
+
+
+    - name: Create the system folders
+      become: yes
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ www_user }}"
+        group: "{{ www_user }}"
+      with_items:
+        - "{{document_root }}/var"
+        - "{{document_root }}/app/data"
+
+
+    - name: Generate parameters.yml
+      template:
+        src: templates/parameters.yml.j2
+        dest: "{{ document_root }}/app/config/parameters.yml"
+        mode: 0644
+      notify:
+        - restart php7-fpm
+
+    - name: Clean cache
+      become: yes
+      become_user: "{{ www_user }}"
+      command: "php bin/console cache:clear --no-interaction -e {{ app_env }}"
+      args:
+        chdir: "{{ document_root }}"
+
+    - name: Run migrations
+      become: yes
+      become_user: "{{ www_user }}"
+      command: "php bin/console doctrine:migrations:migrate --no-interaction -e {{ app_env }}"
+      run_once: true
+      args:
+        chdir: "{{ document_root }}"
+
+    - name: Set cron job to fetch currency rates
+      become: yes
+      become_user: "{{ www_user }}"
+      run_once: true
+      cron:
+        name: Fetch rates
+        minute: 0
+        hour: 1
+        job: "cd {{ document_root }} && php bin/console tbbc:money:ratio-fetch -e {{ app_env }}"
+
+    - name: Notify rollbar
+      run_once: true
+      rollbar_deployment:
+        token: "{{ rollbar_token }}"
+        environment: "{{ rollbar_environment }}"
+        user: "{{ rollbar_user }}"
+        revision: "{{ rollbar_version }}"
+      when: rollbar_user is defined

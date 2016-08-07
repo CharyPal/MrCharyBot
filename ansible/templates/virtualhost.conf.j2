@@ -1,0 +1,37 @@
+server {
+    listen 80;
+    listen 443 ssl;
+
+    ssl_certificate     /etc/ssl/charypal.com/cert.pem;
+    ssl_certificate_key /etc/ssl/charypal.com/key.pem;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+
+    server_name {{ app_domain }};
+
+    root {{ document_root }}/web;
+    index app.php;
+    location / {
+        # try to serve file directly, fallback to rewrite
+        try_files $uri /app.php$is_args$args;
+    }
+
+    location ~ ^/(app|app_dev|config)\.php(/|$) {
+        {% if '/var/run/' in php_fpm_listen %}
+        fastcgi_pass unix:{{ php_fpm_listen }};
+        {% else %}
+        fastcgi_pass: {{ php_fpm_listen }};
+        {% endif %}
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param HTTPS on;
+        fastcgi_param SYMFONY_ENV {{ app_env }};
+        internal;
+    }
+
+    error_log /var/log/nginx/{{ app_domain }}.error.log;
+    access_log /var/log/nginx/{{ app_domain }}.access.log;
+}

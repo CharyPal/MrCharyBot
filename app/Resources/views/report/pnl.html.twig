@@ -1,0 +1,86 @@
+{% extends '::print.html.twig' %}
+
+{% block title %}PnL {{ period.startDate|date('M d, Y') }} - {{ period.endDate|date('M d, Y') }}{% endblock title %}
+
+{% block body %}
+    <div class="row">
+        <h1 class="text-center">Profit and Loss Statement</h1>
+        <h2 class="text-center">{{ period.startDate|date('M d, Y') }} - {{ period.endDate|date('M d, Y') }}</h2>
+    </div>
+
+    <div id="revenue" class="money-table">
+        <h2>Income</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <td>Category</td>
+                <td class="text-right">{{ grandTotal|money_format_currency }}</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category in revenue %}
+            <tr>
+                <td>{{ category.title }}</td>
+                <td class="text-right">{{ category.incomeAmount|money_format_amount }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>Total</td>
+                <td class="text-right">{{ totalRevenue|money_format_amount }}</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div id="expenses" class="money-table">
+        <h2>Expenses</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <td>Category</td>
+                <td class="text-right">{{ grandTotal|money_format_currency }}</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category in expenses %}
+            <tr>
+                <td>{{ category.title }}</td>
+                <td class="text-right">{{ category.expenseAmount|money_format_amount }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>Total</td>
+                <td class="text-right">{{ totalExpense|money_format_amount }}</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div id="net" class="money-table">
+        <h2>Net</h2>
+        <table class="table">
+            <tfoot>
+            <tr>
+                <td>Total</td>
+                <td class="text-right">{{ grandTotal|money_localized_format }}</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    tfoot {
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block analytics %}
+{% endblock %}

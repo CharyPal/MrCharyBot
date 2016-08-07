@@ -1,0 +1,9 @@
+app_homepage:
+    resource: "@AppBundle/Controller/DefaultController.php"
+    type:     annotation
+    schemes:  [https]
+
+app_telegram:
+    resource: "@AppBundle/Controller/TelegramController.php"
+    type:     annotation
+    schemes:  [https]
