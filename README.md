@@ -40,7 +40,7 @@ Run the following command for full provisioning:
     cd ansible
     ansible-playbook -i invs/environmentName playbook.yml
     
-#### Deploy bot only without other software
+#### Deploy bot without other software
 
     cd ansible
     ansible-playbook -i invs/environmentName app.yml    
